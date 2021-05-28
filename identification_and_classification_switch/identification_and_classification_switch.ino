@@ -24,6 +24,7 @@ void loop()
   time = millis();
   
   switch(state)
+  {
     case 0:
       limit = analogRead(A0) + 20;
       state++;
@@ -39,7 +40,8 @@ void loop()
         tval = tval + value;
         cont++;
       }
-      
+
+      timend = millis();
       time = timend - timeinit;
 
       if(time >= 1000)
@@ -47,24 +49,25 @@ void loop()
         state++;
         break;
       }
-      
-    average = tval/cont;
-
-    if (state == 2 && value < limit)
-    {
-      state = 3;
-
-      if(average > 300)
+    case 2:
+      average = tval/cont;
+  
+      if (state == 2 && value < limit)
       {
-        Serial.println("Semente de arroz vermelho");
-        Serial.print("average: ");
-        Serial.println(average);
+        if(average > 300)
+        {
+          Serial.println("Semente de arroz vermelho");
+          Serial.print("average: ");
+          Serial.println(average);
+          break;
+        }
+        else
+        {
+          Serial.print("Semente de arroz branco");
+          Serial.print("average: ");
+          Serial.println(average);
+          break;
+        }
       }
-      else
-      {
-        Serial.print("Semente de arroz branco");
-        Serial.print("average: ");
-        Serial.println(average);
-      }
-    }
+  }
 }
