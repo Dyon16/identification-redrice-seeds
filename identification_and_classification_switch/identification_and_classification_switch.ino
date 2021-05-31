@@ -1,8 +1,9 @@
 int tval = 0, average = 0, cont = 0, state = 0, value, limit, contt = 0;
 
-unsigned long time;
+unsigned long timee;
 unsigned long timeinit;
 unsigned long timend;
+unsigned long ttotal;
 
 /*
 states:
@@ -21,36 +22,67 @@ void setup()
 void loop()
 {
   value = analogRead(A0);
-  time = millis();
+  timee = millis();
   
   switch(state)
   {
     case 0:
-      limit = analogRead(A0) + 20;
+      digitalWrite(7, HIGH);
+      limit = analogRead(A0) + 70;
       state++;
       break; 
     case 1:
-      if (value >= limit)
+      while(state == 1)
       {
-        if(contt == 0)
+        value = analogRead(A0);
+        timee = millis();
+
+        Serial.println(value);
+        
+        if (value >= limit)
         {
-          timeinit = millis();
-          contt++; 
+          Serial.println("Open limit if");
+          if(contt == 0)
+          {
+            timeinit = timee;
+            tval = 0;
+            contt++; 
+          }
+          tval = tval + value;
+          cont++;
+          
+          Serial.print("Tval: ");
+          Serial.println(tval);
         }
-        tval = tval + value;
-        cont++;
-      }
+  
+        if(contt != 0)
+        { 
+          timend = timee;
+          ttotal = timend - timeinit;
 
-      timend = millis();
-      time = timend - timeinit;
+          Serial.print("Inicial time: ");
+          Serial.println(timeinit);
 
-      if(time >= 1000)
-      {
-        state++;
-        break;
+          Serial.print("Final time: ");
+          Serial.println(timend);
+
+          Serial.print("Ttotal: ");
+          Serial.println(ttotal);
+  
+          if(ttotal >= 1000)
+          {
+            Serial.print("timee: ");
+            Serial.println(timee);
+            state++;
+            break;
+          }
+        }
       }
     case 2:
       average = tval/cont;
+
+      Serial.print("State: ");
+      Serial.println(state);
   
       if (state == 2 && value < limit)
       {
@@ -63,7 +95,7 @@ void loop()
         }
         else
         {
-          Serial.print("Semente de arroz branco");
+          Serial.println("Semente de arroz branco");
           Serial.print("average: ");
           Serial.println(average);
           break;
