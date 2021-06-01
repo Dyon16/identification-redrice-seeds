@@ -1,4 +1,10 @@
-int tval = 0, average = 0, cont = 0, state = 0, value, limit;
+int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0;
+unsigned long tval = 0;
+
+unsigned long timee;
+unsigned long timeinit;
+unsigned long timend;
+unsigned long ttotal;
 
 /*
 states:
@@ -11,43 +17,76 @@ states:
 void setup()
 {
     Serial.begin(9600);
-    pinMode(7, HIGH);
+    pinMode(7, OUTPUT);
+    digitalWrite(7, HIGH);
 }
  
 void loop()
 {
-    digitalWrite(7, HIGH);
-    value = analogRead(A0);
+  value = analogRead(A0);
 
-    if (state == 0)
-    {
-      limit = analogRead(A0) + 20;
-      state++;
-    }
-    
+  if (contl == 0)
+  {
+    limit = value + 50; 
+    contl++;
+  }
+  
+  timee = millis();
+  
+  if(state == 0)
+  {
+    average = 0; 
+    cont = 0; 
+    contt = 0;
+    tval = 0;
+    state++;
+  }
+  
+  if(state == 1)
+  {
+    Serial.println(value);
+    Serial.println(limit);
+    Serial.println(" ");
+        
     if (value >= limit)
     {
+      if(contt == 0)
+      {
+        timeinit = timee;
+        contt++; 
+      }
       tval = tval + value;
       cont++;
     }
 
-    average = tval/cont;
+    if(contt != 0)
+    { 
+      timend = timee;
+      ttotal = timend - timeinit;
 
-    if (state == 2 && value < limit)
+      if(ttotal >= 500)
+      {
+        state++;
+      }
+     }
+  }
+    if(contt == 2)
     {
-      state = 3;
-
-      if(average > 300)
+      average = tval/cont;
+  
+      if(average > 690)
       {
         Serial.println("Semente de arroz vermelho");
-        Serial.print("average: ");
-        Serial.println(average);
+        Serial.println((String)"average: "+average);
+        
+        state = 0;
       }
       else
       {
-        Serial.print("Semente de arroz branco");
-        Serial.print("average: ");
-        Serial.println(average);
+        Serial.println("Semente de arroz branco");
+        Serial.println((String)"average: "+average);
+
+        state = 0;
       }
-    }
+  }
 }
