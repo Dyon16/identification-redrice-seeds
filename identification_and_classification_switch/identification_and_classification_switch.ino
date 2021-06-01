@@ -1,4 +1,4 @@
-int average = 0, cont = 0, state = 0, value, limit, contt = 0;
+int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0;
 unsigned long tval = 0;
 
 unsigned long timee;
@@ -17,7 +17,8 @@ states:
 void setup()
 {
     Serial.begin(9600);
-    pinMode(7, HIGH);
+    pinMode(7, OUTPUT);
+    digitalWrite(7, HIGH);
 }
  
 void loop()
@@ -25,12 +26,15 @@ void loop()
   value = analogRead(A0);
   timee = millis();
   
+  if (contl == 0)
+  {
+    limit = value + 50; 
+    contl++;
+  }
+  
   switch(state)
   {
     case 0:
-      digitalWrite(7, HIGH);
-      
-      limit = analogRead(A0) + 50;
       average = 0; 
       cont = 0; 
       contt = 0;
@@ -39,6 +43,10 @@ void loop()
       
       break; 
     case 1:
+        Serial.println(value);
+        Serial.println(limit);
+        Serial.println(" ");
+        
         if (value >= limit)
         {
           if(contt == 0)
@@ -55,7 +63,7 @@ void loop()
           timend = timee;
           ttotal = timend - timeinit;
   
-          if(ttotal >= 200)
+          if(ttotal >= 500)
           {
             state++;
             break;
@@ -65,25 +73,22 @@ void loop()
     case 2:
       average = tval/cont;
   
-      /*if (value < limit)
-      {*/
-        if(average > 690)
-        {
-          Serial.println("Semente de arroz vermelho");
-          Serial.println((String)"average: "+average);
-          
-          state = 0;
-          break;
-        }
-        else
-        {
-          Serial.println("Semente de arroz branco");
-          Serial.println((String)"average: "+average);
+      if(average > 690)
+      {
+        Serial.println("Semente de arroz vermelho");
+        Serial.println((String)"average: "+average);
+        
+        state = 0;
+        break;
+      }
+      else
+      {
+        Serial.println("Semente de arroz branco");
+        Serial.println((String)"average: "+average);
 
-          state = 0;
-          break;
-        }
-      //}
-      break;
+        state = 0;
+        break;
+      }
+    break;
   }
 }
