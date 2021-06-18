@@ -1,10 +1,12 @@
-int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0;
+int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0, i = 0;
 unsigned long tval = 0;
 
 unsigned long timee;
 unsigned long timeinit;
 unsigned long timend;
 unsigned long ttotal;
+
+int vec[600];
 
 /*
 states:
@@ -39,6 +41,7 @@ void loop()
       cont = 0; 
       contt = 0;
       tval = 0;
+      i = 0;
       state++;
       
       break; 
@@ -50,7 +53,12 @@ void loop()
             timeinit = timee;
             contt++; 
           }
-          tval = tval + value;
+          if (cont % 3 == 0)
+          {
+            tval = tval + value;
+            vec[i] = value;
+            i++;
+          }
           cont++;
         }
   
@@ -75,6 +83,11 @@ void loop()
         Serial.println((String)"average: "+average);
         
         Serial.println((String)"cont: "+cont);
+
+        for (int i = 0; i < 599; i++)
+        {
+          Serial.println(vec[i]);
+        }
         
         state = 0;
         break;
@@ -85,6 +98,11 @@ void loop()
         Serial.println("Semente de arroz branco");
         Serial.println((String)"average: "+average);
         Serial.println((String)"cont: "+cont);
+
+        for (int i = 0; i < 599; i++)
+        {
+          Serial.println(vec[i]);
+        }
 
         state = 0;
         break;
