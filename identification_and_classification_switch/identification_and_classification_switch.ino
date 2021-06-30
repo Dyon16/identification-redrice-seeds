@@ -1,4 +1,4 @@
-int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0, i = 0;
+int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0, i = 0, liberou = 0;
 unsigned long tval = 0;
 
 unsigned long timee;
@@ -21,12 +21,18 @@ void setup()
     Serial.begin(9600);
     pinMode(7, OUTPUT);
     digitalWrite(7, HIGH);
+    pinMode(LED_BUILTIN, OUTPUT);
 }
- 
+
 void loop()
 {
-  value = analogRead(A0);
-  timee = millis();
+  while(timee == millis()); // barreira de tempo: espera até timee ser diferente do valor lido por millis(). Na pratica, aguarda até que se inicie o proximo milissegundo, se ainda não estiever ocorrido.
+  timee = millis(); //atualiza o valor de timee para o milissegundo atual.
+  value = analogRead(A0); // le a analógica (1000amostras/s) com a barreira acima
+  
+  //digitalWrite(LED_BUILTIN,timee&1); // liga o led builtin sempre que o timee for impar
+
+  //if((timee % 1000) == 0)Serial.println(timee);
   
   if (contl == 0)
   {
@@ -48,18 +54,39 @@ void loop()
     case 1:
         if (value >= limit)
         {
+          liberou++;
           if(contt == 0)
           {
             timeinit = timee;
             contt++; 
           }
-          if (cont % 3 == 0)
+          /*if (cont % 1 == 0)
           {
             tval = tval + value;
             vec[i] = value;
-            i++;
+            
+            if(i < 599)
+            {
+              i++; // ultimo indice possível, não incrementa mais para não sobrescrever fora da área do array
+            }
           }
-          cont++;
+          cont++;*/
+        }
+
+        cont++;
+
+        if (liberou > 0)
+        {
+          if (cont % 1 == 0)
+            {
+              tval = tval + value;
+              vec[i] = value;
+              
+              if(i < 599)
+              {
+                i++; // ultimo indice possível, não incrementa mais para não sobrescrever fora da área do array
+              }
+            }
         }
   
         if(contt != 0)
@@ -67,7 +94,7 @@ void loop()
           timend = timee;
           ttotal = timend - timeinit;
   
-          if(ttotal >= 300)
+          if(ttotal >= 100)
           {
             state++;
             break;
@@ -77,7 +104,7 @@ void loop()
     case 2:
       average = tval/cont;
   
-      if(cont > 315 && average > 690)
+      if(average > 690)
       {
         Serial.println("Semente de arroz vermelho");
         Serial.println((String)"average: "+average);
@@ -93,7 +120,7 @@ void loop()
         break;
       }
       
-      if(cont > 150 && average < 690)
+      if(average < 690)
       {
         Serial.println("Semente de arroz branco");
         Serial.println((String)"average: "+average);
