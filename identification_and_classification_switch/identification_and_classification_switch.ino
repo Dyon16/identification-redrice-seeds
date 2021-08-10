@@ -1,4 +1,4 @@
-int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0, i = 0, liberou = 0;
+lar int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0, i = 0, liberou = 0;
 unsigned long tval = 0;
 
 unsigned long timee;
@@ -21,7 +21,6 @@ void setup()
     Serial.begin(9600);
     pinMode(7, OUTPUT);
     digitalWrite(7, HIGH);
-    pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop()
@@ -29,10 +28,6 @@ void loop()
   while(timee == millis()); // barreira de tempo: espera até timee ser diferente do valor lido por millis(). Na pratica, aguarda até que se inicie o proximo milissegundo, se ainda não estiever ocorrido.
   timee = millis(); //atualiza o valor de timee para o milissegundo atual.
   value = analogRead(A0); // le a analógica (1000amostras/s) com a barreira acima
-  
-  //digitalWrite(LED_BUILTIN,timee&1); // liga o led builtin sempre que o timee for impar
-
-  //if((timee % 1000) == 0)Serial.println(timee);
   
   if (contl == 0)
   {
@@ -60,17 +55,6 @@ void loop()
             timeinit = timee;
             contt++; 
           }
-          /*if (cont % 1 == 0)
-          {
-            tval = tval + value;
-            vec[i] = value;
-            
-            if(i < 599)
-            {
-              i++; // ultimo indice possível, não incrementa mais para não sobrescrever fora da área do array
-            }
-          }
-          cont++;*/
         }
 
         cont++;
@@ -94,7 +78,7 @@ void loop()
           timend = timee;
           ttotal = timend - timeinit;
   
-          if(ttotal >= 100)
+          if(ttotal >= 600)
           {
             state++;
             break;
