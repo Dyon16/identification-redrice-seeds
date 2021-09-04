@@ -33,7 +33,7 @@ void loop()
     }
   }
 
-  if ((cont = 500) && (activator = 1))
+  if ((cont == 500) && (activator == 1))
   {
     average = tval/cont;
     Serial.print("Average: ");
