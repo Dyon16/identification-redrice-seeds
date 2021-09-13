@@ -59,9 +59,9 @@ void loop()
           timend = timee;
           ttotal = timend - timeinit;
 
-          Serial.println(ttotal);
+          //Serial.println(ttotal);
   
-          if(ttotal >= 20)
+          if(ttotal >= 30)
           {
             state++;
             break;
@@ -71,7 +71,7 @@ void loop()
     case 2:
       average = tval/cont;
   
-      if(average > 690)
+      if(cont > 5 && average > 300)
       {
         Serial.println("Semente de arroz vermelho");
         Serial.println((String)"average: "+average);
@@ -81,8 +81,7 @@ void loop()
         state = 0;
         break;
       }
-      
-      if(average < 690)
+      if(cont > 5 && average < 300) 
       {
         Serial.println("Semente de arroz branco");
         Serial.println((String)"average: "+average);

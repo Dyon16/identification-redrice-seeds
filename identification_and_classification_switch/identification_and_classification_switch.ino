@@ -1,4 +1,4 @@
-lar int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0, i = 0, liberou = 0;
+int average = 0, cont = 0, state = 0, value, limit, contt = 0, contl = 0, i = 0, liberou = 0;
 unsigned long tval = 0;
 
 unsigned long timee;
