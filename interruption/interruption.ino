@@ -3,7 +3,7 @@
 #define pinSensor
 
 int valueSave[500];
-int valueMonitor, limit, countl = 0, tval = 0, average, activator = 0;
+int valueMonitor, limit, countl = 0, tval = 0, average, activator = 0, conta = 0;
 int cont = 0;
 int estado_led = 0;
 
@@ -24,12 +24,28 @@ void loop()
 {
   if (cont < 500)
   {
-    for (int i = 0; i < 499; i ++)
+    int i;
+    
+    for (i = 0; i < 499; i ++)
     {
+      if (i == 0)
+      {
+        Serial.println("Inicio");
+        Serial.println("");
+      }
+      
       tval = tval + valueSave[i];
       
-      Serial.print("Value: ");
-      Serial.println(valueSave[i]);
+      if (valueSave[i] != 0)
+      {
+        Serial.println(valueSave[i]);
+      }
+    }
+
+    if (i == 499)
+    {
+      Serial.println("Fim");
+      Serial.println("");
     }
   }
 
@@ -53,8 +69,12 @@ ISR(TIMER1_OVF_vect)//interrupção do TIMER1 com frequencia de 1Hz //Função d
 
   if (countl == 0)
   {
-    limit = valueMonitor + 50; 
-    countl++;
+    if (conta == 10)
+    {
+      limit = valueMonitor + 150; 
+      countl++;
+    }
+    cont++;
   }
 
   if(cont < 500)
