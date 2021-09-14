@@ -2,7 +2,7 @@
 #define SENSOR_PIN A0
 
 int valueSaver[500];
-int valueSensor, limit, counterLimit = 0, totalValue = 0, average, activator = 0, counterWait = 0, counterInterruption = 0, stateLed = 0;
+int valueSensor, limit, counterLimit = 0, totalValue = 0, average, activator = 0, counterWait = 0, counterInterruption = 0;
 
 void setup()
 {
