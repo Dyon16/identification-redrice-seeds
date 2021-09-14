@@ -24,7 +24,7 @@ void loop()
 {
   Serial.println(limit);
   
-  /*if (cont < 500)
+  if (cont < 500)
   {
     int i;
     
@@ -62,7 +62,7 @@ void loop()
     cont = 0;
     tval = 0;
     activator = 0;
-  }*/
+  }
 }
 
 ISR(TIMER1_OVF_vect)//interrupção do TIMER1 com frequencia de 1Hz //Função da biblioteca arduino
