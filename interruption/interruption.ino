@@ -2,10 +2,8 @@
 #define SENSOR_PIN A0
 #define pinSensor
 
-int valueSave[500];
-int valueMonitor, limit, countl = 0, tval = 0, average, activator = 0, conta = 0;
-int cont = 0;
-int estado_led = 0;
+int valueSaver[500];
+int valueSensor, limit, counterLimit = 0, totalValue = 0, average, activator = 0, counterWait = 0, counterInterruption = 0, estado_led = 0;
 
 void setup()
 {
@@ -22,9 +20,10 @@ void setup()
 
 void loop()
 {
+  int i;
   Serial.println(limit);
   
-  if (cont < 500)
+  if (counterInterruption < 500)
   {
     int i;
     
@@ -32,15 +31,15 @@ void loop()
     {
       if (i == 0)
       {
-        Serial.println("Inicio");
+        Serial.println("inicio");
         Serial.println("");
       }
       
-      tval = tval + valueSave[i];
+      totalValue = totalValue + valueSaver[i];
       
-      if (valueSave[i] != 0)
+      if (valueSaver[i] != 0)
       {
-        Serial.println(valueSave[i]);
+        Serial.println(valueSaver[i]);
       }
     }
 
@@ -51,54 +50,54 @@ void loop()
     }
   }
 
-  if ((cont == 500) && (activator == 1))
+  if ((counterInterruption == 500) && (activator == 1))
   {
-    average = tval/cont;
+    average = totalValue/counterInterruption;
     Serial.print("Average: ");
     Serial.println(average);
 
     Serial.println("Encheu o vetor");
 
-    cont = 0;
-    tval = 0;
+    counterInterruption = 0;
+    totalValue = 0;
     activator = 0;
   }
 }
 
-ISR(TIMER1_OVF_vect)//interrupção do TIMER1 com frequencia de 1Hz //Função da biblioteca arduino
+ISR(TIMER1_OVF_vect)//interrupção do TMER1 com frequencia de 1Hz //Função da biblioteca arduino
 {
   TCNT1 += 49536; //Renicia TIMER //65536 - 16000 = 49536 (valor a ser carregado no registrador de 16 bits)
 
-  if (countl == 0)
+  if (counterLimit == 0)
   {
-    if (conta == 10)
+    if (counterWait == 10)
     {
-      limit = valueMonitor + 150; 
-      countl++;
+      limit = valueSensor + 150; 
+      counterLimit++;
     }
-    conta++;
+    counterWait++;
   }
 
-  if(cont < 500)
+  if(counterInterruption < 500)
   {
-    valueMonitor = analogRead(SENSOR_PIN);
+    valueSensor = analogRead(SENSOR_PIN);
     
-      if (valueMonitor > limit)
+      if (valueSensor > limit)
       {
-        valueSave[cont] = analogRead(SENSOR_PIN);
+        valueSaver[counterInterruption] = analogRead(SENSOR_PIN);
         activator = 1;
-        cont++;
+        counterInterruption++;
       }
   }
 
-  /*if (cont >= 1000)
+  /*if (iInterruption >= 1000)
   {
-    cont = 0;
+    iInterruption = 0;
   }
   
-  cont++;
+  iInterruption++;
 
-  if (cont >= 500)
+  if (iInterruption >= 500)
   {
     digitalWrite(LED_PIN, HIGH);
   }
