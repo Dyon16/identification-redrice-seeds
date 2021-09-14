@@ -1,9 +1,8 @@
 #define LED_PIN 7
 #define SENSOR_PIN A0
-#define pinSensor
 
 int valueSaver[500];
-int valueSensor, limit, counterLimit = 0, totalValue = 0, average, activator = 0, counterWait = 0, counterInterruption = 0, estado_led = 0;
+int valueSensor, limit, counterLimit = 0, totalValue = 0, average, activator = 0, counterWait = 0, counterInterruption = 0, stateLed = 0;
 
 void setup()
 {
@@ -20,30 +19,28 @@ void setup()
 
 void loop()
 {
-  int i;
+  int counter;
   Serial.println(limit);
   
   if (counterInterruption < 500)
-  {
-    int i;
-    
-    for (i = 0; i < 499; i ++)
+  { 
+    for (counter = 0; counter < 499; counter ++)
     {
-      if (i == 0)
+      if (counter == 0)
       {
         Serial.println("inicio");
         Serial.println("");
       }
       
-      totalValue = totalValue + valueSaver[i];
+      totalValue = totalValue + valueSaver[counter];
       
-      if (valueSaver[i] != 0)
+      if (valueSaver[counter] != 0)
       {
-        Serial.println(valueSaver[i]);
+        Serial.println(valueSaver[counter]);
       }
     }
 
-    if (i == 499)
+    if (counter == 499)
     {
       Serial.println("Fim");
       Serial.println("");
