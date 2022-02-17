@@ -2,7 +2,7 @@
 #define SENSOR_PIN A0
 
 int valueSaver[500];
-int valueSensor, limit, counterLimit = 0, totalValue = 0, average, activator = 0, counterWait = 0, counterInterruption = 0;
+int valueSensor, limit, counterLimit = 0, totalValue = 0, average, activator = 0, counterWait = 0, counterInterruption = 0, stateSeed = 0;
 
 void setup()
 {
@@ -18,54 +18,56 @@ void setup()
 } 
 
 void loop()
-{
+
   int counter;
-  Serial.println(limit);
-  
-  if (counterInterruption < 500)
-  { 
+
+  Serial.println(counterInterruption);
+
+  if (counterInterruption > 100)
+  {
     for (counter = 0; counter < 499; counter ++)
-    {
-      if (counter == 0)
       {
-        Serial.println("inicio");
+        if (counter == 0)
+        {
+          Serial.println("inicio");
+          Serial.println("");
+        }
+        
+        totalValue = totalValue + valueSaver[counter];
+        
+        if (valueSaver[counter] != 0)
+        {
+          Serial.println(valueSaver[counter]);
+        }
+      }
+    
+      if (counter == 498)
+      {
+        stateSeed = 1;
+        Serial.println("Fim");
         Serial.println("");
       }
-      
-      totalValue = totalValue + valueSaver[counter];
-      
-      if (valueSaver[counter] != 0)
-      {
-        Serial.println(valueSaver[counter]);
-      }
     }
-
-    if (counter == 499)
+    
+    if ((counterInterruption == 500) && (activator == 1))
     {
-      Serial.println("Fim");
-      Serial.println("");
+      average = totalValue/counterInterruption;
+      Serial.print("Average: ");
+      Serial.println(average);
+    
+      Serial.println("Encheu o vetor");
+    
+      counterInterruption = 0;
+      totalValue = 0;
+      activator = 0;
     }
-  }
-
-  if ((counterInterruption == 500) && (activator == 1))
-  {
-    average = totalValue/counterInterruption;
-    Serial.print("Average: ");
-    Serial.println(average);
-
-    Serial.println("Encheu o vetor");
-
-    counterInterruption = 0;
-    totalValue = 0;
-    activator = 0;
-  }
 }
 
 ISR(TIMER1_OVF_vect)//interrupção do TMER1 com frequencia de 1Hz //Função da biblioteca arduino
 {
   TCNT1 += 49536; //Renicia TIMER //65536 - 16000 = 49536 (valor a ser carregado no registrador de 16 bits)
 
-  if (counterLimit == 0)
+  /*if (counterLimit == 0)
   {
     if (counterWait == 10)
     {
@@ -73,33 +75,17 @@ ISR(TIMER1_OVF_vect)//interrupção do TMER1 com frequencia de 1Hz //Função da
       counterLimit++;
     }
     counterWait++;
-  }
-
-  if(counterInterruption < 500)
-  {
-    valueSensor = analogRead(SENSOR_PIN);
-    
-      if (valueSensor > limit)
-      {
-        valueSaver[counterInterruption] = analogRead(SENSOR_PIN);
-        activator = 1;
-        counterInterruption++;
-      }
-  }
-
-  /*if (iInterruption >= 1000)
-  {
-    iInterruption = 0;
-  }
-  
-  iInterruption++;
-
-  if (iInterruption >= 500)
-  {
-    digitalWrite(LED_PIN, HIGH);
-  }
-  else
-  {
-    digitalWrite(LED_PIN, LOW);
   }*/
+
+  limit = 10;
+  
+  valueSensor = analogRead(SENSOR_PIN);
+  
+  if(valueSensor > limit)
+  {
+    for(counterInterruption = 0; counterInterruption < 499; counterInterruption++)
+    {
+      valueSaver[counterInterruption] = analogRead(SENSOR_PIN);
+    }
+  }
 }
